@@ -1,6 +1,6 @@
-from airflow.decorators import dag, task  # Correct import for 2.x
+from airflow.decorators import dag, task  
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
-from airflow.sensors.base import PokeReturnValue # Correct import for 2.x
+from airflow.sensors.base import PokeReturnValue 
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 from datetime import datetime
 
