@@ -3,8 +3,9 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 
-from flight_ops.scripts.bronze_ingest import fetch_and_upload_to_gcp
-from flight_ops.scripts.silver_transform import transform_bronze_to_silver
+from scripts.bronze_ingest import fetch_and_upload_to_gcp
+from scripts.silver_transform import transform_bronze_to_silver
+from scripts.gold_aggregate import transform_silver_to_gold
 
 default_args = {
     "owner": "airflow",
@@ -24,14 +25,19 @@ with DAG(
     catchup=False,
     tags=["flight_ops", "gcs", "api"],
 ) as dag:
-    extract_upload_task = PythonOperator(
+    bronze_task = PythonOperator(
         task_id="fetch_and_upload_to_gcp",
         python_callable=fetch_and_upload_to_gcp,
         provide_context=True,
     )
-    transform_task = PythonOperator(
+    silver_task = PythonOperator(
         task_id="transform_bronze_to_silver",
         python_callable=transform_bronze_to_silver,
         provide_context=True,
     )
-    extract_upload_task >> transform_task
+    gold_task = PythonOperator(
+        task_id="transform_silver_to_gold",
+        python_callable=transform_silver_to_gold,
+        provide_context=True,
+    )
+    bronze_task >> silver_task >> gold_task

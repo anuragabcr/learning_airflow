@@ -1,10 +1,10 @@
 import pandas as pd
 import json
 import logging
-import airflow.providers.google.cloud.hooks.gcs as GCSHook
+from airflow.providers.google.cloud.hooks.gcs import GCSHook
 
 GCS_BUCKET_NAME = "learning-0101-airflow"
-GCS_FILE_PATH_TEMPLATE = "silver/flights_{ts}.json" 
+GCS_FILE_PATH_TEMPLATE = "silver/flights_{ts}.csv" 
 
 def transform_bronze_to_silver(**kwargs):
     ki = kwargs['ti']
@@ -34,7 +34,7 @@ def transform_bronze_to_silver(**kwargs):
 
         silver_df = states_df[['icao24','callsign','origin_country',
                             'longitude','latitude','baro_altitude',
-                            'velocity','true_track']]
+                            'velocity','true_track', 'on_ground']]
     else:
         silver_df = df
     
