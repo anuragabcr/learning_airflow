@@ -8,7 +8,7 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.hooks.gcs import GCSHook
 
 API_URL = "https://opensky-network.org/api/states/all"
-GCS_BUCKET_NAME = "learning-3112-airflow"
+GCS_BUCKET_NAME = "learning-0101-airflow"
 GCS_FILE_PATH = "bronze/flights_{}.json"
 
 default_args = {

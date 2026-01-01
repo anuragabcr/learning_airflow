@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 
 from flight_ops.scripts.bronze_ingest import fetch_and_upload_to_gcp
+from flight_ops.scripts.silver_transform import transform_bronze_to_silver
 
 default_args = {
     "owner": "airflow",
@@ -28,4 +29,9 @@ with DAG(
         python_callable=fetch_and_upload_to_gcp,
         provide_context=True,
     )
-    extract_upload_task
+    transform_task = PythonOperator(
+        task_id="transform_bronze_to_silver",
+        python_callable=transform_bronze_to_silver,
+        provide_context=True,
+    )
+    extract_upload_task >> transform_task
